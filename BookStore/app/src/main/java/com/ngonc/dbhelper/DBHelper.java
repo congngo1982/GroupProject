@@ -24,18 +24,19 @@ public class DBHelper extends SQLiteOpenHelper {
             "phone TEXT (12)  NOT NULL, " +
             "address  TEXT (200) NOT NULL)";
     String createAuthor = "CREATE TABLE authors (" +
-            "id INTEGER PRIMARY KEY, " +
+            "id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, " +
             "name TEXT (50) NOT NULL, " +
             "gender TEXT, " +
             "description TEXT, " +
             "birthday TEXT)";
     String createBook = "CREATE TABLE books ( " +
-            "id INTEGER PRIMARY KEY NOT NULL, " +
+            "id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, " +
             "name TEXT (50) NOT NULL, " +
-            "author TEXT (50) NOT NULL  REFERENCES authors (name), " +
+            "author INTEGER (50) NOT NULL  REFERENCES authors (id), " +
             "category TEXT (50) NOT NULL, " +
             "ISBN TEXT (12) NOT NULL,  " +
-            "price INTEGER NOT NULL , " +
+            "price DOUBLE NOT NULL , " +
+            "quantity INTEGER NOT NULL , " +
             "status INTEGER NOT NULL)";
     String createOrder = "CREATE TABLE [order] ( " +
             "id INTEGER PRIMARY KEY AUTOINCREMENT, " +
