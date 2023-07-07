@@ -40,7 +40,7 @@ public class BookService {
         long result = db.insert(TABLE, null, values);
         db.close();
 
-        return result != -1; // Trả về true nếu thêm sách thành công, ngược lại trả về false
+        return result != -1;
     }
 
     public List<Books> GetAllBook() {
@@ -127,4 +127,5 @@ public class BookService {
 
         return rowsAffected > 0;
     }
+
 }

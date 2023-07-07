@@ -12,48 +12,52 @@
 
         <TextView
             android:id="@+id/tvNameBook"
-            android:layout_width="wrap_content"
+            android:layout_width="90dp"
             android:layout_height="35dp"
             android:layout_weight="1"
             android:text="TextView"
+            android:gravity="center"
             android:textAlignment="center"/>
 
         <TextView
             android:id="@+id/tvAuthor"
-            android:layout_width="wrap_content"
+            android:layout_width="90dp"
             android:layout_height="35dp"
             android:layout_weight="1"
             android:text="TextView"
-            android:textAlignment="center"/>
-
-        <TextView
-            android:id="@+id/tvPrice"
-            android:layout_width="wrap_content"
-            android:layout_height="35dp"
-            android:layout_weight="1"
-            android:text="TextView"
+            android:gravity="center"
             android:textAlignment="center"/>
         <TextView
             android:id="@+id/tvCategory"
-            android:layout_width="wrap_content"
+            android:layout_width="90dp"
             android:layout_height="35dp"
             android:layout_weight="1"
+            android:gravity="center"
             android:text="TextView"
             android:textAlignment="center"/>
+        <TextView
+            android:id="@+id/tvPrice"
+            android:layout_width="90dp"
+            android:layout_height="35dp"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="TextView"
+            android:textAlignment="center"/>
+
 
         <ImageView
             android:id="@+id/imgEdit"
             android:layout_width="35dp"
             android:layout_height="35dp"
             android:layout_weight="1"
-            app:srcCompat="@drawable/ic_launcher_background" />
+            app:srcCompat="@drawable/ic_edit_book" />
 
         <ImageView
             android:id="@+id/imgDelete"
             android:layout_width="35dp"
             android:layout_height="35dp"
             android:layout_weight="1"
-            app:srcCompat="@drawable/ic_launcher_background" />
+            app:srcCompat="@drawable/ic_update_book" />
     </LinearLayout>
 
 </LinearLayout>

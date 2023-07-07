@@ -9,6 +9,9 @@ import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
 
+import com.ngonc.dbhelper.AuthorService;
+import com.ngonc.dbhelper.BookService;
+import com.ngonc.dbhelper.DBHelper;
 import com.ngonc.model.Books;
 
 import java.util.List;
@@ -71,8 +74,11 @@ public class BookAdapter extends BaseAdapter {
 
         //get book by position into books
         Books book = books.get(position);
+        DBHelper dpHelper = new DBHelper(context.getApplicationContext());
+        AuthorService authorService = new AuthorService(dpHelper);
+
         viewHolder.tvName.setText(book.getName().toString());
-        viewHolder.tvAuthor.setText(String.valueOf(book.getAuthorId()));
+        viewHolder.tvAuthor.setText(authorService.getAuthorById(book.getAuthorId()).getName().toString());
         viewHolder.tvPrice.setText(String.format("%.2f", book.getPrice()));
         viewHolder.tvCategory.setText(book.getCategory().toString());
 

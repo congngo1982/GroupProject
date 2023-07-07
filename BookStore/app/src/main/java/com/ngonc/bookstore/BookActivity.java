@@ -15,8 +15,10 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.SearchView;
 import android.widget.Spinner;
 import android.widget.Toast;
+import androidx.appcompat.widget.Toolbar;
 
 import com.ngonc.dbhelper.AuthorService;
 import com.ngonc.dbhelper.BookService;
@@ -38,7 +40,7 @@ public class BookActivity extends AppCompatActivity implements BookActivityListe
     BookService bookService;
     EditText edNameBook, edPrice, edQuantity, edISBN;
     Spinner spAuthor, spCategory, spStatus;
-
+    Toolbar toolBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,14 +55,9 @@ public class BookActivity extends AppCompatActivity implements BookActivityListe
         bookAdapter = new BookAdapter(this, R.layout.books, books);
         lvBook.setAdapter(bookAdapter);
 
-        //btnCreateBook
-        Button btnCreateBook = (Button) findViewById(R.id.btnCreateBook);
-        btnCreateBook.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                createBook();
-            }
-        });
+        //set toolbar
+        toolBar = (Toolbar)findViewById(R.id.toolbar);
+        setSupportActionBar(toolBar);
 
         //set interface to delete and edit button by icon
         bookAdapter.setBookActivityListener(this);
@@ -335,34 +332,73 @@ public class BookActivity extends AppCompatActivity implements BookActivityListe
     }
 
 
+    private List<Books> originalBooks;
+    //set toolbar
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.menu_book, menu);
 
-//    @Override
-//    public boolean onCreateOptionsMenu(Menu menu) {
-//        MenuInflater inflater = getMenuInflater();
-//        inflater.inflate(R.menu.menu_book, menu);
-//        return super.onCreateOptionsMenu(menu);
-//    }
-//
-//    @Override
-//    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-//        int id = item.getItemId();
-//        if(id == R.id.menu_add_author){
-//            Intent intent = new Intent(BookActivity.this, AuthorActivity.class);
-//            startActivity(intent);
-//            return true;
-//        }
-//        if(id == R.id.menu_add_book){
-//            AlertDialog.Builder builder = new AlertDialog.Builder(BookActivity.this);
-//            View dialogView = getLayoutInflater().inflate(R.layout.add_book, null);
-//            builder.setView(dialogView);
-//            builder.setTitle("Add Book");
-//
-//
-//            AlertDialog dialog = builder.create();
-//            dialog.show();
-//            return true;
-//        }
-//        return super.onOptionsItemSelected(item);
-//    }
+        MenuItem menuItem = menu.findItem(R.id.menu_search_book);
+        SearchView searchView = (SearchView) menuItem.getActionView();
+        searchView.setQueryHint("Search book.....");
+
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                List<Books> bookList = books;
+                if (originalBooks == null) {
+                    originalBooks = new ArrayList<>(books);
+                }
+                if (newText.isEmpty()) {
+                    updateDatabase();
+                } else {
+                    List<Books> filteredBooks = search(bookList, newText);
+                    books.clear();
+                    books.addAll(filteredBooks);
+                    bookAdapter.notifyDataSetChanged();
+                }
+                return false;
+            }
+        });
+
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        int id = item.getItemId();
+        if(id == R.id.menu_add_author){
+            Intent intent = new Intent(BookActivity.this, AuthorActivity.class);
+            startActivity(intent);
+            return true;
+        }
+        if(id == R.id.menu_add_book){
+            createBook();
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+    public List<Books> search (List<Books> bookList, String search){
+        List<Books> newBooks = new ArrayList<>();
+        AuthorService authorService = new AuthorService(dbHelper);
+        for (Books book: bookList) {
+            int authorId = book.getAuthorId();
+            Author author = authorService.getAuthorById(authorId);
+            if(book.getName().toLowerCase().contains(search.toLowerCase())
+                    || author != null
+                    && author.getName().toLowerCase().contains(search.toLowerCase())
+                    && book.isStatus() == true){
+                newBooks.add(book);
+            }
+        }
+        return newBooks;
+    }
+
 }
 

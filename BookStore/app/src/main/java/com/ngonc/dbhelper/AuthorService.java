@@ -14,6 +14,7 @@ public class AuthorService {
 
     private DBHelper dbHelper;
     private static final String TABLE = "authors";
+    private static final String ID = "id";
     private static final String NAME = "name";
     private static final String GENDER = "gender";
     private static final String DESCRIPTION = "description";
@@ -52,4 +53,29 @@ public class AuthorService {
         cursor.close();
         return authors;
     }
+    public Author getAuthorById(int id) {
+        SQLiteDatabase db = this.dbHelper.getReadableDatabase();
+        String query = "SELECT * FROM " + TABLE + " WHERE id = ?";
+        String[] selectionArgs = {String.valueOf(id)};
+        Cursor cursor = db.rawQuery(query, selectionArgs);
+        Author author = null;
+        if (cursor.moveToFirst()) {
+            int idColumnIndex = cursor.getColumnIndex(ID);
+            int nameColumnIndex = cursor.getColumnIndex(NAME);
+            int genderColumnIndex = cursor.getColumnIndex(GENDER);
+            int descriptionColumnIndex = cursor.getColumnIndex(DESCRIPTION);
+            int birthdayColumnIndex = cursor.getColumnIndex(BIRTHDAY);
+            if (idColumnIndex > -1 && nameColumnIndex > -1 && genderColumnIndex > -1) {
+                int authorId = cursor.getInt(idColumnIndex);
+                String name = cursor.getString(nameColumnIndex);
+                String gender = cursor.getString(genderColumnIndex);
+                String description = cursor.isNull(descriptionColumnIndex) ? null : cursor.getString(descriptionColumnIndex);
+                String birthday = cursor.isNull(birthdayColumnIndex) ? null : cursor.getString(birthdayColumnIndex);
+                author = new Author(authorId, name, gender, description, birthday);
+            }
+        }
+        cursor.close();
+        return author;
+    }
+
 }
