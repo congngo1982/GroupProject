@@ -58,14 +58,7 @@ public class Author {
         this.birthday = birthday;
     }
 
-    @Override
     public String toString() {
-        return "Author{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
-                ", gender='" + gender + '\'' +
-                ", description='" + description + '\'' +
-                ", birthday='" + birthday + '\'' +
-                '}';
+        return id + " - " + name + " - " + gender + " - " + birthday + " - " + description;
     }
 }

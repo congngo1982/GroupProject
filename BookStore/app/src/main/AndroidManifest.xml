@@ -13,16 +13,19 @@
         android:theme="@style/Theme.BookStore"
         tools:targetApi="31">
         <activity
+            android:name=".BookDetails"
+            android:exported="false" />
+        <activity
             android:name="com.ngonc.listview.MyCartLayout"
             android:exported="false" />
         <activity
             android:name=".CartList"
             android:exported="false" />
         <activity
-            android:name=".Book"
+            android:name=".BookActivity"
             android:exported="false" />
         <activity
-            android:name=".Author"
+            android:name=".AuthorActivity"
             android:exported="false" />
         <activity
             android:name=".Register"

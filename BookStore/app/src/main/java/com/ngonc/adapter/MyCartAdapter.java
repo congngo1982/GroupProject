@@ -10,6 +10,7 @@ import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.ngonc.bookstore.R;
@@ -48,7 +49,7 @@ public class MyCartAdapter extends BaseAdapter {
     @Override
     public View getView(int i, View view, ViewGroup viewGroup) {
 
-        view =layoutInflater.inflate(R.layout.cart_layout, null);
+        view = layoutInflater.inflate(R.layout.cart_layout, null);
         TextView content = view.findViewById(R.id.cartContent);
         TextView price = view.findViewById(R.id.cartPrice);
         TextView quantity = view.findViewById(R.id.cartQuantity);
@@ -59,21 +60,33 @@ public class MyCartAdapter extends BaseAdapter {
         content.setText(cart.getBooks().getName());
         price.setText(cart.getBooks().getPrice() + "");
         quantity.setText(cart.getAmount() + "");
+        Books books = cart.getBooks();
 
         increase.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                cart.setAmount(cart.getAmount() + 1);
-                quantity.setText(cart.getAmount() + "");
-                SaveCart();
+                if (cart.getAmount() < books.getQuantity()) {
+                    cart.setAmount(cart.getAmount() + 1);
+                    quantity.setText(cart.getAmount() + "");
+                    Utils.SaveCartContext(context, cartList);
+//                    SaveCart();
+                } else {
+                    Toast.makeText(context, "Quantity in Stock is not enough !!!", Toast.LENGTH_LONG).show();
+                }
             }
         });
         decrease.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                cart.setAmount(cart.getAmount() - 1);
-                quantity.setText(cart.getAmount() + "");
-                SaveCart();
+                if (cart.getAmount() > 1) {
+                    cart.setAmount(cart.getAmount() - 1);
+                    quantity.setText(cart.getAmount() + "");
+                    Utils.SaveCartContext(context, cartList);
+//                    SaveCart();
+                } else {
+                    Toast.makeText(context, "Quantity must higher than 0", Toast.LENGTH_LONG).show();
+                }
+
             }
         });
         deleteCart.setOnClickListener(new View.OnClickListener() {
@@ -87,7 +100,7 @@ public class MyCartAdapter extends BaseAdapter {
         return view;
     }
 
-    public void SaveCart(){
+    public void SaveCart() {
         SharedPreferences pref = context.getSharedPreferences("MYAPP", 0); // 0 - for private mode
         SharedPreferences.Editor editor = pref.edit();
         String carts = new Gson().toJson(cartList);

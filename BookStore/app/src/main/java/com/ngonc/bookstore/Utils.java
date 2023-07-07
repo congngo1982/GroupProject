@@ -27,6 +27,22 @@ public class Utils {
         editor.commit();
     }
 
+    public static void SaveCurrentUser(Context context, Account account){
+        SharedPreferences pref = context.getSharedPreferences("MYAPP", 0); // 0 - for private mode
+        SharedPreferences.Editor editor = pref.edit();
+        String accountJson = new Gson().toJson(account);
+        editor.putString("ACCOUNT", accountJson);
+        editor.commit();
+    }
+    public static Account GetCurrentAccount(Context context){
+        SharedPreferences pref = context.getSharedPreferences("MYAPP", 0); // 0 - for private mode
+//        pref.getString("CARTLIST", null);
+        String accountJson = pref.getString("ACCOUNT", null);
+        Type type = Account.class;
+        Account account = new Gson().fromJson(accountJson, type);
+        return account;
+    }
+
     public static List<Cart> GetCartContext(Context context){
         SharedPreferences pref = context.getSharedPreferences("MYAPP", 0); // 0 - for private mode
         pref.getString("CARTLIST", null);
@@ -39,8 +55,8 @@ public class Utils {
 
     public static void AddtoCart(BookService bookService, AuthorService authorService) {
         List<Cart> carts = new ArrayList<>();
-        Books book1 = bookService.GetBookById(1, authorService);
-        Books book2 = bookService.GetBookById(2, authorService);
+        Books book1 = bookService.getBookById(1);
+        Books book2 = bookService.getBookById(2);
         carts.add(new Cart(book1, 10, book1.getPrice()));
         carts.add(new Cart(book2, 5, book2.getPrice()));
         System.out.println(carts);
@@ -64,57 +80,57 @@ public class Utils {
     }
 
     public static void AddBook(BookService bookService, AuthorService authorService) {
-        bookService.AddBook(new Books(2,
-                "Shin Cau be but chi",
-                authorService.GetAuthorByName("Author1"),
-                "Comedy",
-                "1111",
-                16.0,
-                10, true));
-        bookService.AddBook(new Books(1,
-                "Doraemon",
-                authorService.GetAuthorByName("Author2"),
-                "Comedy",
-                "2222",
-                16.0,
-                20, true));
-        bookService.AddBook(new Books(3,
-                "Conan",
-                authorService.GetAuthorByName("Author3"),
-                "Comedy",
-                "3333",
-                16.0,
-                10, true));
-        bookService.AddBook(new Books(4,
-                "Trang Quynh",
-                authorService.GetAuthorByName("Author4"),
-                "Comedy",
-                "4444",
-                16.0,
-                20, true));
-        bookService.AddBook(new Books(5,
-                "Pokemon",
-                authorService.GetAuthorByName("Author5"),
-                "Comedy",
-                "5555",
-                16.0,
-                10, true));
-        bookService.AddBook(new Books(6,
-                "Co 2 con meo ngoi ben cua so",
-                authorService.GetAuthorByName("Author2"),
-                "Comedy",
-                "6666",
-                16.0,
-                20, true));
+//        bookService.AddBook(new Books(2,
+//                "Shin Cau be but chi",
+//                authorService.GetAuthorByName("Author1"),
+//                "Comedy",
+//                "1111",
+//                16.0,
+//                10, true));
+//        bookService.AddBook(new Books(1,
+//                "Doraemon",
+//                authorService.GetAuthorByName("Author2"),
+//                "Comedy",
+//                "2222",
+//                16.0,
+//                20, true));
+//        bookService.AddBook(new Books(3,
+//                "Conan",
+//                authorService.GetAuthorByName("Author3"),
+//                "Comedy",
+//                "3333",
+//                16.0,
+//                10, true));
+//        bookService.AddBook(new Books(4,
+//                "Trang Quynh",
+//                authorService.GetAuthorByName("Author4"),
+//                "Comedy",
+//                "4444",
+//                16.0,
+//                20, true));
+//        bookService.AddBook(new Books(5,
+//                "Pokemon",
+//                authorService.GetAuthorByName("Author5"),
+//                "Comedy",
+//                "5555",
+//                16.0,
+//                10, true));
+//        bookService.AddBook(new Books(6,
+//                "Co 2 con meo ngoi ben cua so",
+//                authorService.GetAuthorByName("Author2"),
+//                "Comedy",
+//                "6666",
+//                16.0,
+//                20, true));
     }
     public static List<Cart> GetCart(BookService bookService, AuthorService authorService) {
         List<Cart> carts = new ArrayList<>();
-        Books book1 = bookService.GetBookById(1, authorService);
-        Books book2 = bookService.GetBookById(2, authorService);
-        Books book3 = bookService.GetBookById(3, authorService);
-        Books book4 = bookService.GetBookById(4, authorService);
-        Books book5 = bookService.GetBookById(5, authorService);
-        Books book6 = bookService.GetBookById(6, authorService);
+        Books book1 = bookService.getBookById(1);
+        Books book2 = bookService.getBookById(2);
+        Books book3 = bookService.getBookById(3);
+        Books book4 = bookService.getBookById(4);
+        Books book5 = bookService.getBookById(5);
+        Books book6 = bookService.getBookById(6);
         carts.add(new Cart(book1, 10, book1.getPrice()));
         carts.add(new Cart(book2, 5, book2.getPrice()));
         carts.add(new Cart(book3, 4, book3.getPrice()));

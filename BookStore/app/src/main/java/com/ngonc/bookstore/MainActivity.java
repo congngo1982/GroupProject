@@ -2,25 +2,20 @@ package com.ngonc.bookstore;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
-import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.ListView;
 
 import com.google.gson.Gson;
-import com.ngonc.dbhelper.AccountService;
-import com.ngonc.dbhelper.AuthorService;
+import com.ngonc.adapter.MainBookAdapter;
 import com.ngonc.dbhelper.BookService;
 import com.ngonc.dbhelper.DBHelper;
-import com.ngonc.model.Account;
-import com.ngonc.model.Author;
 import com.ngonc.model.Books;
-import com.ngonc.model.Cart;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
@@ -30,7 +25,27 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        Button cart = findViewById(R.id.viewCart);
+        ListView listBook  = findViewById(R.id.listBook);
+        ImageView cart = findViewById(R.id.btnCart);
+        ImageView shopping = findViewById(R.id.btnOrder);
+        ImageView account = findViewById(R.id.btnAccount);
+
+        DBHelper dbHelper = new DBHelper(getApplicationContext());
+        BookService bookService = new BookService(dbHelper);
+        List<Books> booksList = bookService.GetAllBook();
+        MainBookAdapter mainBookAdapter = new MainBookAdapter(getApplicationContext(), booksList);
+        listBook.setAdapter(mainBookAdapter);
+
+        listBook.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                System.out.println(booksList.get(i));
+                String book = new Gson().toJson(booksList.get(i));
+                Intent intent = new Intent(MainActivity.this, BookDetails.class);
+                intent.putExtra("BOOK", book);
+                startActivity(intent);
+            }
+        });
         cart.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

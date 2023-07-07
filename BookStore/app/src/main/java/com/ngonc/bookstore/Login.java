@@ -19,6 +19,7 @@ import com.ngonc.dbhelper.DBHelper;
 import com.ngonc.model.Account;
 import com.ngonc.model.Cart;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class Login extends AppCompatActivity {
@@ -63,12 +64,10 @@ public class Login extends AppCompatActivity {
         Account account = accountService.Login(username, password);
         if (account != null) {
             Intent intent = new Intent(Login.this, MainActivity.class);
-
-            DBHelper dbHelper = new DBHelper(this.getApplicationContext());
-            AuthorService authorService = new AuthorService(dbHelper);
-            BookService bookService = new BookService(dbHelper);
-            Utils.SaveCartContext(getApplicationContext(), Utils.GetCart(bookService, authorService));
-
+            List<Cart> cartList = Utils.GetCartContext(getApplicationContext());
+            if (cartList == null) {
+                Utils.SaveCartContext(getApplicationContext(), new ArrayList<>());
+            }
             startActivity(intent);
         } else {
             TextView error = (TextView) findViewById(R.id.loginError);
