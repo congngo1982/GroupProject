@@ -10,8 +10,6 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 
-<<<<<<< Updated upstream
-=======
 import com.google.gson.Gson;
 import com.ngonc.dbhelper.AccountService;
 import com.ngonc.dbhelper.AuthorService;
@@ -25,15 +23,12 @@ import com.ngonc.model.Cart;
 import java.util.ArrayList;
 import java.util.List;
 
->>>>>>> Stashed changes
 public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-<<<<<<< Updated upstream
-=======
 
         Button cart = findViewById(R.id.viewCart);
         cart.setOnClickListener(new View.OnClickListener() {
@@ -43,6 +38,5 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
->>>>>>> Stashed changes
     }
 }

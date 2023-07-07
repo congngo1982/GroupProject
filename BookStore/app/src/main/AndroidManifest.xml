@@ -13,9 +13,6 @@
         android:theme="@style/Theme.BookStore"
         tools:targetApi="31">
         <activity
-<<<<<<< Updated upstream
-            android:name=".MainActivity"
-=======
             android:name="com.ngonc.listview.MyCartLayout"
             android:exported="false" />
         <activity
@@ -32,7 +29,6 @@
             android:exported="false" />
         <activity
             android:name=".Login"
->>>>>>> Stashed changes
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
