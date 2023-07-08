@@ -29,12 +29,14 @@ public class AuthorActivity extends AppCompatActivity {
 
 
     EditText edNameAuthor, edDescription, edBirthday;
-    Button btnAdd;
+    Button btnAdd, btnDelete, btnUpdate;
     Spinner spinnerGenderAuthor;
     DBHelper dbHelper;
     AuthorService authorService;
     com.ngonc.model.Author author;
     ListView lvAuthor;
+    ArrayAdapter<Author> adapter;
+    List<Author> authorList;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -55,8 +57,8 @@ public class AuthorActivity extends AppCompatActivity {
         lvAuthor = (ListView)findViewById(R.id.lv);
         dbHelper = new DBHelper(this.getApplicationContext());
         authorService = new AuthorService(dbHelper);
-        List<Author> authorList = authorService.GetAllAuthor();
-        ArrayAdapter<Author> adapter = new ArrayAdapter<>(AuthorActivity.this, android.R.layout.simple_list_item_1, authorList);
+        authorList = authorService.getAllAuthor();
+        adapter = new ArrayAdapter<>(AuthorActivity.this, android.R.layout.simple_list_item_1, authorList);
         lvAuthor.setAdapter(adapter);
 
         //binding listview
@@ -78,56 +80,155 @@ public class AuthorActivity extends AppCompatActivity {
         btnAdd.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String authorName = edNameAuthor.getText().toString();
-                String birthDay = edBirthday.getText().toString();
-                if(authorName.isEmpty()){
-                    Toast.makeText(AuthorActivity.this, "Must be fill in Author name!", Toast.LENGTH_SHORT).show();
-                }else {
-                    if(checkAuthorExistByName(authorList, authorName) == false){
-                        author = new Author();
-                        author.setName(authorName);
-                        author.setGender(spinnerGenderAuthor.getSelectedItem().toString());
-                        author.setDescription(edDescription.getText().toString());
-                        if(birthDay != null && !birthDay.isEmpty()){
-                            if(validateBirthday(birthDay) == true){
-                                author.setBirthday(birthDay);
-                            }else {
-                                Toast.makeText(AuthorActivity.this, "Birthday must be before 2006!", Toast.LENGTH_SHORT).show();
-                                return;
-                            }
-                        } else if (birthDay == null|| birthDay.isEmpty()) {
-                            author.setBirthday(birthDay);
-                        }
-                        //dialog confirm add
-                            AlertDialog.Builder builder = new AlertDialog.Builder(AuthorActivity.this);
-                            builder.setTitle("Confirmation");
-                            builder.setMessage("Are you sure you want to add the author " + authorName + "?");
-                            builder.setPositiveButton("Add", new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialog, int which) {
-                                    authorService.AddAuthor(author);
-                                    Toast.makeText(getApplicationContext(), "Add success Author", Toast.LENGTH_SHORT).show();
-
-                                    //load new author list
-                                    List<Author> authorList = authorService.GetAllAuthor();
-                                    adapter.clear();
-                                    adapter.addAll(authorList);
-                                    adapter.notifyDataSetChanged();
-                                }
-                            });
-                            builder.setNegativeButton("Cancel", null);
-                            builder.show();
-
-
+                createAuthor();
+            }
+        });
+        //delete author
+        btnDelete = (Button) findViewById(R.id.btnDelete);
+        btnDelete.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String name = edNameAuthor.getText().toString();
+                deleteAuthor(name);
+            }
+        });
+        //update author
+        btnUpdate = (Button) findViewById(R.id.btnUpdate);
+        btnUpdate.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                updateAuthor();
+            }
+        });
+    }
+    private void updateDatabase(){
+        //load new author list
+        List<Author> authorList = authorService.getAllAuthor();
+        adapter.clear();
+        adapter.addAll(authorList);
+        adapter.notifyDataSetChanged();
+    }
+    private void createAuthor(){
+        String authorName = edNameAuthor.getText().toString();
+        String birthDay = edBirthday.getText().toString();
+        if(authorName.isEmpty() || authorName == ""){
+            Toast.makeText(AuthorActivity.this, "Must be fill in Author name!", Toast.LENGTH_SHORT).show();
+        }else {
+            if(checkAuthorExistByName(authorList, authorName) == false){
+                author = new Author();
+                author.setName(authorName);
+                author.setGender(spinnerGenderAuthor.getSelectedItem().toString());
+                author.setDescription(edDescription.getText().toString());
+                if(birthDay != null && !birthDay.isEmpty()){
+                    if(validateBirthday(birthDay) == true){
+                        author.setBirthday(birthDay);
                     }else {
-                        Toast.makeText(getApplicationContext(), "Name Author have Exist!", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(AuthorActivity.this, "Birthday must be before 2006!", Toast.LENGTH_SHORT).show();
+                        return;
                     }
+                } else if (birthDay == null|| birthDay.isEmpty()) {
+                    author.setBirthday(birthDay);
+                }
+                //dialog confirm add
+                AlertDialog.Builder builder = new AlertDialog.Builder(AuthorActivity.this);
+                builder.setTitle("Confirmation");
+                builder.setMessage("Are you sure you want to add the author " + authorName + "?");
+                builder.setPositiveButton("Add", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        authorService.AddAuthor(author);
+                        Toast.makeText(getApplicationContext(), "Add success Author", Toast.LENGTH_SHORT).show();
+
+                        updateDatabase();
+                    }
+                });
+                builder.setNegativeButton("Cancel", null);
+                builder.show();
+
+
+            }else {
+                Toast.makeText(getApplicationContext(), "Name Author have Exist!", Toast.LENGTH_SHORT).show();
+            }
+        }
+    }
+
+    private void deleteAuthor(String name){
+        AlertDialog.Builder builder = new AlertDialog.Builder(AuthorActivity.this);
+        builder.setTitle("Confirmation");
+        builder.setMessage("Are you sure you want to Delete the author " + name + "?");
+        builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                if(checkAuthorExistByName(authorList, name) == true){
+                    boolean rs = authorService.deleteAuthorByName(name);
+                    if(rs){
+                        edBirthday.setText("");
+                        edDescription.setText("");
+                        edNameAuthor.setText("");
+                        spinnerGenderAuthor.setSelection(0);
+                        Toast.makeText(AuthorActivity.this, "Delete successfully!", Toast.LENGTH_SHORT).show();
+                        updateDatabase();
+                    }else {
+                        Toast.makeText(AuthorActivity.this, "Delete unsuccessfully!", Toast.LENGTH_SHORT).show();
+                    }
+                }else {
+                    Toast.makeText(getApplicationContext(), "Name Author haven't Exist or equal null!", Toast.LENGTH_SHORT).show();
                 }
             }
         });
-
-
+        builder.setNegativeButton("No", null);
+        builder.show();
     }
+
+    private void updateAuthor(){
+        String name = edNameAuthor.getText().toString();
+        if(name.isEmpty()){
+            Toast.makeText(AuthorActivity.this, "Name author must be filled!", Toast.LENGTH_SHORT).show();
+        } else {
+            if(checkAuthorExistByName(authorList, name)){
+                AlertDialog.Builder builder = new AlertDialog.Builder(AuthorActivity.this);
+                builder.setTitle("Confirmation");
+                builder.setMessage("Are you sure you want to update the author " + name + "?");
+                builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        String newBirthDay = edBirthday.getText().toString();
+                        String newGender = spinnerGenderAuthor.getSelectedItem().toString();
+                        String newDescription = edDescription.getText().toString();
+
+                        Author updatedAuthor = new Author();
+                        updatedAuthor.setName(name);
+                        updatedAuthor.setGender(newGender);
+                        updatedAuthor.setDescription(newDescription);
+
+                        if(newBirthDay != null && !newBirthDay.isEmpty()){
+                            if(validateBirthday(newBirthDay)){
+                                updatedAuthor.setBirthday(newBirthDay);
+                            } else {
+                                Toast.makeText(AuthorActivity.this, "Birthday must be before 2006!", Toast.LENGTH_SHORT).show();
+                                return;
+                            }
+                        } else {
+                            updatedAuthor.setBirthday(newBirthDay);
+                        }
+
+                        boolean result = authorService.UpdateAuthor(updatedAuthor);
+                        if(result){
+                            Toast.makeText(AuthorActivity.this, "Update author successfully!", Toast.LENGTH_SHORT).show();
+                            updateDatabase();
+                        } else {
+                            Toast.makeText(AuthorActivity.this, "Update author failed!", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                });
+                builder.setNegativeButton("No", null);
+                builder.show();
+            } else {
+                Toast.makeText(AuthorActivity.this, "Author name doesn't exist!", Toast.LENGTH_SHORT).show();
+            }
+        }
+    }
+
     private boolean validateBirthday(String birthday) {
         SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
         sdf.setLenient(false);

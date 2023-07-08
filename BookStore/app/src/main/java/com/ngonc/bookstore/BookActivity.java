@@ -207,42 +207,48 @@ public class BookActivity extends AppCompatActivity implements BookActivityListe
         btnEditBook.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                String name = edNameBook.getText().toString();
+                AlertDialog.Builder builder = new AlertDialog.Builder(BookActivity.this);
+                builder.setTitle("Confirmation");
+                builder.setMessage("Are you sure you want to Update the author " + name + "?");
+                builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        //get new info book from dialog
+                        String newPrice = edPrice.getText().toString();
+                        String newQuantity = edQuantity.getText().toString();
+                        int newAuthorId = authors.get(spAuthor.getSelectedItemPosition()).getId();
+                        String newCategory = spCategory.getSelectedItem().toString();
+                        boolean newStatus = spStatus.getSelectedItemPosition() == 0;
 
-                //get new info book from dialog
-                String newName = edNameBook.getText().toString();
-                String newISBN = edISBN.getText().toString();
-                String newPrice = edPrice.getText().toString();
-                String newQuantity = edQuantity.getText().toString();
-                int newAuthorId = authors.get(spAuthor.getSelectedItemPosition()).getId();
-                String newCategory = spCategory.getSelectedItem().toString();
-                boolean newStatus = spStatus.getSelectedItemPosition() == 0;
 
+                        if (newPrice.isEmpty() || newQuantity.isEmpty()) {
+                            Toast.makeText(getApplicationContext(), "Please fill in all fields", Toast.LENGTH_SHORT).show();
+                        }else if(Double.parseDouble(newPrice) <= 0){
+                            Toast.makeText(getApplicationContext(), "Price must be > 0!", Toast.LENGTH_SHORT).show();
+                        }else if(Integer.parseInt(newQuantity) <= 0){
+                            Toast.makeText(getApplicationContext(), "Quantity must be > 0!", Toast.LENGTH_SHORT).show();
+                        }
+                        // update book
+                        book.setPrice(Double.parseDouble(newPrice));
+                        book.setQuantity(Integer.parseInt(newQuantity));
+                        book.setAuthorId(newAuthorId);
+                        book.setCategory(newCategory);
+                        book.setStatus(newStatus);
 
-                if (newPrice.isEmpty() || newQuantity.isEmpty()) {
-                    Toast.makeText(getApplicationContext(), "Please fill in all fields", Toast.LENGTH_SHORT).show();
-                }else if(Double.parseDouble(newPrice) <= 0){
-                    Toast.makeText(getApplicationContext(), "Price must be > 0!", Toast.LENGTH_SHORT).show();
-                }else if(Integer.parseInt(newQuantity) <= 0){
-                    Toast.makeText(getApplicationContext(), "Quantity must be > 0!", Toast.LENGTH_SHORT).show();
-                }
-                // update book
-                book.setName(newName);
-                book.setISBN(newISBN);
-                book.setPrice(Double.parseDouble(newPrice));
-                book.setQuantity(Integer.parseInt(newQuantity));
-                book.setAuthorId(newAuthorId);
-                book.setCategory(newCategory);
-                book.setStatus(newStatus);
+                        boolean isBookUpdated = bookService.UpdateBook(book);
+                        if (isBookUpdated) {
+                            Toast.makeText(getApplicationContext(), "Book updated successfully!", Toast.LENGTH_SHORT).show();
 
-                boolean isBookUpdated = bookService.UpdateBook(book);
-                if (isBookUpdated) {
-                    Toast.makeText(getApplicationContext(), "Book updated successfully!", Toast.LENGTH_SHORT).show();
-
-                    //update books
-                    updateDatabase();
-                } else {
-                    Toast.makeText(getApplicationContext(), "Failed to update book!", Toast.LENGTH_SHORT).show();
-                }
+                            //update books
+                            updateDatabase();
+                        } else {
+                            Toast.makeText(getApplicationContext(), "Failed to update book!", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                });
+                builder.setNegativeButton("Cancel", null);
+                builder.show();
                 dialog.dismiss();
             }
         });
@@ -276,7 +282,7 @@ public class BookActivity extends AppCompatActivity implements BookActivityListe
 
     private boolean checkBookExistByName(List<Books> books){
         for (Books book: books) {
-            if (book.getName().equals(edNameBook.getText().toString())){
+            if (book.getName().equals(edNameBook.getText().toString()) && book.isStatus() == true){
                 return true;
             }
         }
@@ -302,7 +308,7 @@ public class BookActivity extends AppCompatActivity implements BookActivityListe
     }
     private List<Author> setAdapterAuthor(Spinner spinner) {
         AuthorService authorService = new AuthorService(dbHelper);
-        List<Author> authors = authorService.GetAllAuthor();
+        List<Author> authors = authorService.getAllAuthor();
         List<String> authorNames = new ArrayList<>();
         for (Author author : authors) {
             authorNames.add(author.getName());
