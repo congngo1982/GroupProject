@@ -125,6 +125,7 @@ public class BookActivity extends AppCompatActivity implements BookActivityListe
                 String isbn = edISBN.getText().toString();
                 String priceStr = edPrice.getText().toString();
                 String quantityStr = edQuantity.getText().toString();
+                int selectedAuthorPosition = spAuthor.getSelectedItemPosition();
 
                 if (bookName.isEmpty() || isbn.isEmpty() || priceStr.isEmpty() || quantityStr.isEmpty()) {
                     Toast.makeText(getApplicationContext(), "Please fill in all fields", Toast.LENGTH_SHORT).show();
@@ -136,30 +137,31 @@ public class BookActivity extends AppCompatActivity implements BookActivityListe
                     Toast.makeText(getApplicationContext(), "Price must be > 0!", Toast.LENGTH_SHORT).show();
                 }else if(Integer.parseInt(quantityStr) <= 0){
                     Toast.makeText(getApplicationContext(), "Quantity must be > 0!", Toast.LENGTH_SHORT).show();
-                }else {
+                }else  if (selectedAuthorPosition == 0 || selectedAuthorPosition == -1) {
+                    Toast.makeText(getApplicationContext(), "Don't have author please create an author!", Toast.LENGTH_SHORT).show();
+                }
+                else {
                     if (checkBookExistByName(books) == false && checkISBNExist(books) == false) {
                         // Selected author id
-                        int selectedAuthorPosition = spAuthor.getSelectedItemPosition();
                         Author selectedAuthor = setAdapterAuthor(spAuthor).get(selectedAuthorPosition);
+                            Books book = new Books();
+                            book.setName(bookName);
+                            book.setAuthorId(selectedAuthor.getId());
+                            book.setCategory(spCategory.getSelectedItem().toString());
+                            book.setISBN(isbn);
+                            book.setPrice(Double.parseDouble(priceStr));
+                            book.setQuantity(Integer.parseInt(quantityStr));
+                            book.setStatus(true);
+                            boolean isBookAdded = bookService.AddBook(book);
+                            if (isBookAdded) {
+                                Toast.makeText(getApplicationContext(), "Book added successfully!", Toast.LENGTH_SHORT).show();
 
-                        Books book = new Books();
-                        book.setName(bookName);
-                        book.setAuthorId(selectedAuthor.getId());
-                        book.setCategory(spCategory.getSelectedItem().toString());
-                        book.setISBN(isbn);
-                        book.setPrice(Double.parseDouble(priceStr));
-                        book.setQuantity(Integer.parseInt(quantityStr));
-                        book.setStatus(true);
-                        boolean isBookAdded = bookService.AddBook(book);
-                        if (isBookAdded) {
-                            Toast.makeText(getApplicationContext(), "Book added successfully!", Toast.LENGTH_SHORT).show();
-
-                            // Update books
-                            updateDatabase();
-                        } else {
-                            Toast.makeText(getApplicationContext(), "Failed to add book!", Toast.LENGTH_SHORT).show();
-                        }
-                        dialog.dismiss();
+                                // Update books
+                                updateDatabase();
+                            } else {
+                                Toast.makeText(getApplicationContext(), "Failed to add book!", Toast.LENGTH_SHORT).show();
+                            }
+                            dialog.dismiss();
                     } else {
                         Toast.makeText(getApplicationContext(), "Name Book or ISBN already exists!", Toast.LENGTH_SHORT).show();
                     }
