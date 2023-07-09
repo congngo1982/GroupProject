@@ -19,7 +19,7 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <EditText
-        android:id="@+id/editTextText"
+        android:id="@+id/regisUsername"
         android:layout_width="244dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="216dp"
@@ -32,7 +32,7 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <EditText
-        android:id="@+id/editTextTextPassword2"
+        android:id="@+id/regisPassword"
         android:layout_width="244dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
@@ -42,10 +42,10 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.497"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/editTextText" />
+        app:layout_constraintTop_toBottomOf="@+id/regisUsername" />
 
     <EditText
-        android:id="@+id/editTextText2"
+        android:id="@+id/regisEmail"
         android:layout_width="244dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
@@ -55,10 +55,10 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.497"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/editTextTextPassword2" />
+        app:layout_constraintTop_toBottomOf="@+id/regisPassword" />
 
     <EditText
-        android:id="@+id/editTextText3"
+        android:id="@+id/regisPhone"
         android:layout_width="244dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
@@ -68,10 +68,10 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.497"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/editTextText2" />
+        app:layout_constraintTop_toBottomOf="@+id/regisEmail" />
 
     <EditText
-        android:id="@+id/editTextText4"
+        android:id="@+id/regisAddress"
         android:layout_width="244dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
@@ -81,10 +81,10 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.497"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/editTextText3" />
+        app:layout_constraintTop_toBottomOf="@+id/regisPhone" />
 
     <Button
-        android:id="@+id/button2"
+        android:id="@+id/btnCreateSeller"
         android:layout_width="244dp"
         android:layout_height="44dp"
         android:layout_marginTop="20dp"
@@ -92,10 +92,10 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.497"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/editTextText4" />
+        app:layout_constraintTop_toBottomOf="@+id/regisAddress" />
 
     <Button
-        android:id="@+id/button3"
+        android:id="@+id/btnCreateBuyer"
         android:layout_width="244dp"
         android:layout_height="44dp"
         android:layout_marginTop="16dp"
@@ -103,6 +103,6 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.502"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/button2" />
+        app:layout_constraintTop_toBottomOf="@+id/btnCreateSeller" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

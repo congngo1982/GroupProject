@@ -3,7 +3,7 @@ package com.ngonc.model;
 public class Books {
     private int id;
     private String name;
-    private Author author;
+    private int authorId;
     private String category;
     private String ISBN;
     private double price;
@@ -13,10 +13,10 @@ public class Books {
     public Books() {
     }
 
-    public Books(int id, String name, Author author, String category, String ISBN, double price, int quantity, boolean status) {
+    public Books(int id, String name, int authorId, String category, String ISBN, double price, int quantity, boolean status) {
         this.id = id;
         this.name = name;
-        this.author = author;
+        this.authorId = authorId;
         this.category = category;
         this.ISBN = ISBN;
         this.price = price;
@@ -40,12 +40,12 @@ public class Books {
         this.name = name;
     }
 
-    public Author getAuthor() {
-        return author;
+    public int getAuthorId() {
+        return authorId;
     }
 
-    public void setAuthor(Author author) {
-        this.author = author;
+    public void setAuthorId(int authorId) {
+        this.authorId = authorId;
     }
 
     public String getCategory() {
@@ -86,5 +86,19 @@ public class Books {
 
     public void setStatus(boolean status) {
         this.status = status;
+    }
+
+    @Override
+    public String toString() {
+        return "Books{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", authorId=" + authorId +
+                ", category='" + category + '\'' +
+                ", ISBN='" + ISBN + '\'' +
+                ", price=" + price +
+                ", quantity=" + quantity +
+                ", status=" + status +
+                '}';
     }
 }

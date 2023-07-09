@@ -13,25 +13,57 @@
         android:theme="@style/Theme.BookStore"
         tools:targetApi="31">
         <activity
-            android:name=".Book"
+            android:name=".UserInformation"
             android:exported="false" />
         <activity
-            android:name=".Author"
+            android:name=".Admin"
+            android:exported="false" />
+        <activity
+            android:name=".Account"
+            android:exported="false" />
+        <activity
+            android:name=".Order"
+            android:exported="false" />
+        <activity
+            android:name=".OrderDetails"
+            android:exported="false" />
+        <activity
+            android:name=".BookDetails"
+            android:exported="false" />
+        <activity
+            android:name="com.ngonc.listview.MyCartLayout"
+            android:exported="false" />
+        <activity
+            android:name=".CartList"
+            android:exported="false" />
+        <activity
+            android:name=".BookActivity"
+            android:exported="false" />
+        <activity
+            android:name=".AuthorActivity"
             android:exported="false" />
         <activity
             android:name=".Register"
             android:exported="false" />
         <activity
             android:name=".Login"
-            android:exported="false" />
-        <activity
-            android:name=".MainActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+        </activity>
+        <activity
+            android:name=".MainActivity"
+            android:exported="false">
+
+            <!-- <intent-filter> -->
+            <!-- <action android:name="android.intent.action.MAIN" /> -->
+
+
+            <!-- <category android:name="android.intent.category.LAUNCHER" /> -->
+            <!-- </intent-filter> -->
         </activity>
     </application>
 

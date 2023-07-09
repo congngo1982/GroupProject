@@ -58,7 +58,7 @@ public class AccountService {
         return accounts;
     }
 
-    public Account GetAccountByUsername(String username, String password) {
+    public Account Login(String username, String password) {
         Account account = null;
         SQLiteDatabase db = this.dbHelper.getReadableDatabase();
         String query = String.format("SELECT * FROM %s WHERE %s = ? AND %s = ? ", TABLE, USERNAME, PASSWORD);
@@ -81,5 +81,46 @@ public class AccountService {
             cursor.close();
         }
         return account;
+    }
+    public Account GetAccountByUsername(String username) {
+        Account account = null;
+        SQLiteDatabase db = this.dbHelper.getReadableDatabase();
+        String query = String.format("SELECT * FROM %s WHERE %s = ?", TABLE, USERNAME);
+        Cursor cursor = db.rawQuery(query, new String[]{username});
+        try {
+            if (cursor != null) {
+                cursor.moveToFirst();
+            }
+            account = new Account(cursor.getString(0),
+                    cursor.getString(1),
+                    cursor.getString(2),
+                    cursor.getString(3),
+                    cursor.getString(4),
+                    cursor.getString(5));
+            cursor.close();
+            return account;
+        } catch (Exception ex) {
+
+        } finally {
+            cursor.close();
+        }
+        return account;
+    }
+
+    public void UpdateAccount(Account account, String username){
+        SQLiteDatabase db = dbHelper.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put(USERNAME, account.getUsername());
+        values.put(PASSWORD, account.getPassword());
+        values.put(EMAIL, account.getEmail());
+        values.put(PHONE, account.getPhone());
+        values.put(ADDRESS, account.getAddress());
+        db.update(TABLE, values, USERNAME + " = ?", new String[]{username});
+    }
+    public void UpdateAccountRole(Account account){
+        SQLiteDatabase db = dbHelper.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put(ROLE, "ADMIN");
+        db.update(TABLE, values, USERNAME + " = ?", new String[]{account.getUsername()});
     }
 }

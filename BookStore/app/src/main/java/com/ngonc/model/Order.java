@@ -8,13 +8,13 @@ public class Order {
     private Account account;
     private Date createdDate;
     private String address;
-    private int totalPrice;
+    private double totalPrice;
     private List<OrderDetails> orderDetails;
 
     public Order() {
     }
 
-    public Order(int id, Account account, Date createdDate, String address, int totalPrice, List<OrderDetails> orderDetails) {
+    public Order(int id, Account account, Date createdDate, String address, double totalPrice, List<OrderDetails> orderDetails) {
         this.id = id;
         this.account = account;
         this.createdDate = createdDate;
@@ -55,11 +55,11 @@ public class Order {
         this.address = address;
     }
 
-    public int getTotalPrice() {
+    public double getTotalPrice() {
         return totalPrice;
     }
 
-    public void setTotalPrice(int totalPrice) {
+    public void setTotalPrice(double totalPrice) {
         this.totalPrice = totalPrice;
     }
 
@@ -69,5 +69,17 @@ public class Order {
 
     public void setOrderDetails(List<OrderDetails> orderDetails) {
         this.orderDetails = orderDetails;
+    }
+
+    @Override
+    public String toString() {
+        return "Order{" +
+                "id=" + id +
+                ", account=" + account +
+                ", createdDate=" + createdDate +
+                ", address='" + address + '\'' +
+                ", totalPrice=" + totalPrice +
+                ", orderDetails=" + orderDetails +
+                '}';
     }
 }

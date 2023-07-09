@@ -57,4 +57,8 @@ public class Author {
     public void setBirthday(String birthday) {
         this.birthday = birthday;
     }
+
+    public String toString() {
+        return id + " - " + name + " - " + gender + " - " + birthday + " - " + description;
+    }
 }
