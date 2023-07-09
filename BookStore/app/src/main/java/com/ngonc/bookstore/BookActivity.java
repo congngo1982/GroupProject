@@ -62,6 +62,17 @@ public class BookActivity extends AppCompatActivity implements BookActivityListe
         //set interface to delete and edit button by icon
         bookAdapter.setBookActivityListener(this);
 
+        Button logout = findViewById(R.id.btnLogoutSeller);
+        logout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(BookActivity.this, Login.class);
+                Utils.Logout(getApplicationContext());
+                startActivity(intent);
+                finish();
+            }
+        });
+
     }
 
     private List<Books> listBookByStatus(List<Books> books){

@@ -30,7 +30,7 @@ public class Utils {
     public static void SaveCurrentUser(Context context, Account account){
         SharedPreferences pref = context.getSharedPreferences("MYAPP", 0); // 0 - for private mode
         SharedPreferences.Editor editor = pref.edit();
-        String accountJson = new Gson().toJson(account);
+        String accountJson = account != null ? new Gson().toJson(account) : "empty";
         editor.putString("ACCOUNT", accountJson);
         editor.commit();
     }
@@ -41,6 +41,13 @@ public class Utils {
         Type type = Account.class;
         Account account = new Gson().fromJson(accountJson, type);
         return account;
+    }
+
+    public static void Logout(Context context){
+        SharedPreferences pref = context.getSharedPreferences("MYAPP", 0); // 0 - for private mode
+        SharedPreferences.Editor editor = pref.edit();
+        editor.remove("ACCOUNT");
+        editor.commit();
     }
 
     public static List<Cart> GetCartContext(Context context){

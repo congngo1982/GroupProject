@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -31,8 +32,14 @@ public class BookDetails extends AppCompatActivity {
         Button addToCart = findViewById(R.id.btnAddToCart);
 
         System.out.println("Cart: " + Utils.GetCartContext(getApplicationContext()));
-
-        if(getIntent() != null){
+        ImageView back = findViewById(R.id.bookDetailBack);
+        back.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                finish();
+            }
+        });
+        if (getIntent() != null) {
             String book = getIntent().getStringExtra("BOOK");
             Books books = new Gson().fromJson(book, Books.class);
             name.setText(books.getName());
@@ -47,8 +54,8 @@ public class BookDetails extends AppCompatActivity {
                 @Override
                 public void onClick(View view) {
                     List<Cart> cartList = Utils.GetCartContext(getApplicationContext());
-                    for(int i = 0; i< cartList.size(); i++){
-                        if(cartList.get(i).getBooks().getId() == books.getId()){
+                    for (int i = 0; i < cartList.size(); i++) {
+                        if (cartList.get(i).getBooks().getId() == books.getId()) {
                             Toast.makeText(getApplicationContext(), "Book is Existed in Cart", Toast.LENGTH_LONG).show();
                             return;
                         }

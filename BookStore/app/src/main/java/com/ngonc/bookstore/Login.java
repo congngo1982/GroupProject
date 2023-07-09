@@ -34,19 +34,33 @@ public class Login extends AppCompatActivity {
         TextView register = (TextView) findViewById(R.id.txtRegister);
         DBHelper dbHelper = new DBHelper(getApplicationContext());
         AccountService accountService = new AccountService(dbHelper);
-        btnLogin.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Login(accountService, txtUsername.getText().toString(), txtPassword.getText().toString());
-            }
-        });
-        register.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(Login.this, Register.class);
-                startActivityForResult(intent, 1);
-            }
-        });
+//        accountService.AddAccount(new Account("admin",
+//                "admin",
+//                "ADMIN",
+//                "admin@gmail",
+//                "123",
+//                "VN"));
+        Account account = Utils.GetCurrentAccount(getApplicationContext());
+        if (account != null && (accountService.Login(account.getUsername(), account.getPassword()) != null)) {
+
+            String role = account.getRole();
+            GetAuthorization(role);
+        } else {
+            btnLogin.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Login(accountService, txtUsername.getText().toString(), txtPassword.getText().toString());
+                }
+            });
+            register.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Intent intent = new Intent(Login.this, Register.class);
+                    startActivityForResult(intent, 1);
+                }
+            });
+        }
+
     }
 
     @Override
@@ -63,15 +77,33 @@ public class Login extends AppCompatActivity {
     public void Login(AccountService accountService, String username, String password) {
         Account account = accountService.Login(username, password);
         if (account != null) {
+            List<Cart> cartList = Utils.GetCartContext(getApplicationContext());
+            if (cartList == null) {
+                Utils.SaveCartContext(getApplicationContext(), new ArrayList<>());
+            }
+            Utils.SaveCurrentUser(getApplicationContext(), account);
+            GetAuthorization(account.getRole());
+        } else {
+            TextView error = (TextView) findViewById(R.id.loginError);
+            error.setText("Username or Password is Incorrect");
+        }
+    }
+
+    public void GetAuthorization(String role){
+        if(role.equals("SELLER")){
+            Intent intent = new Intent(Login.this, BookActivity.class);
+            startActivity(intent);
+        } else if(role.equals("BUYER")){
             Intent intent = new Intent(Login.this, MainActivity.class);
             List<Cart> cartList = Utils.GetCartContext(getApplicationContext());
             if (cartList == null) {
                 Utils.SaveCartContext(getApplicationContext(), new ArrayList<>());
             }
             startActivity(intent);
-        } else {
-            TextView error = (TextView) findViewById(R.id.loginError);
-            error.setText("Username or Password is Incorrect");
+        }else{
+            Intent intent = new Intent(Login.this, Admin.class);
+            startActivity(intent);
         }
     }
+
 }

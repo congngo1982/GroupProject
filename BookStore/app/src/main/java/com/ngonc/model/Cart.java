@@ -13,8 +13,8 @@ public class Cart {
     public Cart(Books books, int amount, double price) {
         this.books = books;
         this.amount = amount;
-        this.price = price;
-        this.totalPrice = amount * price;
+        this.price = books.getPrice();
+        this.totalPrice = amount * this.price;
     }
 
     public int getId() {

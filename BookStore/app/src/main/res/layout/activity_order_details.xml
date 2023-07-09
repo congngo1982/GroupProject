@@ -4,66 +4,67 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".CartList">
+    tools:context=".OrderDetails">
 
     <TextView
-        android:id="@+id/textView4"
-        android:layout_width="401dp"
+        android:id="@+id/textView3"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
-        android:text="My Cart"
+        android:text="Order Information"
         android:textAlignment="center"
         android:textSize="34sp"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.058"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <ListView
-        android:id="@+id/cartList"
+        android:id="@+id/orderDetailList"
         android:layout_width="400dp"
-        android:layout_height="590dp"
-        android:layout_marginTop="8dp"
+        android:layout_height="604dp"
+        android:layout_marginTop="10dp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.454"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView4" />
+        app:layout_constraintTop_toBottomOf="@+id/textView3" />
 
     <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="62dp"
-        android:weightSum="10"
+        android:layout_width="385dp"
+        android:layout_height="45dp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent">
+        android:layout_marginBottom="5dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        android:weightSum="10">
 
         <Button
-            android:id="@+id/addToOrder"
-            android:layout_width="match_parent"
-            android:layout_height="50dp"
-            android:layout_gravity="center_vertical"
-            android:layout_weight="3"
-            android:text="Order" />
-
-        <TextView
-            android:id="@+id/txtTotal"
-            android:layout_width="match_parent"
+            android:id="@+id/btnAddToOrder"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
-            android:layout_marginLeft="5dp"
-            android:layout_weight="7"
-            android:gravity="center_vertical"
-            android:text="Total Price :"
-            android:textSize="24sp" />
+            android:layout_weight="8"
+            android:text="Order Now" />
 
+        <TextView
+            android:id="@+id/txtOrderDetailTotal"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_weight="2"
+            android:text="Total: "
+            android:textSize="20sp" />
     </LinearLayout>
 
     <ImageView
-        android:id="@+id/cartBack"
+        android:id="@+id/detailBack"
         android:layout_width="40dp"
         android:layout_height="40dp"
         android:layout_marginTop="18dp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.013"
+        app:layout_constraintHorizontal_bias="0.016"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         android:src="@drawable/arrow" />
+
+
 </androidx.constraintlayout.widget.ConstraintLayout>

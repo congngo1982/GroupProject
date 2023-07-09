@@ -128,6 +128,30 @@ public class BookService {
         return rowsAffected > 0;
     }
 
+    public List<Books> SearchBook(String name) {
+        List<Books> books = new ArrayList<>();
+        String query = String.format("SELECT * FROM %s WHERE %s LIKE ?", TABLE, NAME);
+        SQLiteDatabase db = this.dbHelper.getReadableDatabase();
+        Cursor cursor = db.rawQuery(query, new String[]{"%" + name + "%"});
+        cursor.moveToFirst();
+        while (!cursor.isAfterLast()) {
+            Books book = new Books(
+                    cursor.getInt(0),
+                    cursor.getString(1),
+                    cursor.getInt(2),
+                    cursor.getString(3),
+                    cursor.getString(4),
+                    cursor.getDouble(5),
+                    cursor.getInt(6),
+                    intToBoolean(cursor.getInt(7))
+            );
+            books.add(book);
+            cursor.moveToNext();
+        }
+        cursor.close();
+        return books;
+    }
+
 }
 
 

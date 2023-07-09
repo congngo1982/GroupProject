@@ -13,6 +13,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
+import com.ngonc.bookstore.CartList;
 import com.ngonc.bookstore.R;
 import com.ngonc.bookstore.Utils;
 import com.ngonc.model.Books;
@@ -25,10 +26,12 @@ public class MyCartAdapter extends BaseAdapter {
     Context context;
     List<Cart> cartList;
 
-    public MyCartAdapter(Context context, List<Cart> cartList) {
+    CartList cartListActivity;
+    public MyCartAdapter(Context context, List<Cart> cartList, CartList cartActivity) {
         this.layoutInflater = LayoutInflater.from(context);
         this.cartList = cartList;
         this.context = context;
+        this.cartListActivity = cartActivity;
     }
 
     @Override
@@ -60,6 +63,7 @@ public class MyCartAdapter extends BaseAdapter {
         content.setText(cart.getBooks().getName());
         price.setText(cart.getBooks().getPrice() + "");
         quantity.setText(cart.getAmount() + "");
+//        cartListActivity.SetTotal("Total: " + GetTotalPrice());
         Books books = cart.getBooks();
 
         increase.setOnClickListener(new View.OnClickListener() {
@@ -68,10 +72,11 @@ public class MyCartAdapter extends BaseAdapter {
                 if (cart.getAmount() < books.getQuantity()) {
                     cart.setAmount(cart.getAmount() + 1);
                     quantity.setText(cart.getAmount() + "");
+                    cartListActivity.SetTotal("Total: " + GetTotalPrice());
+//                    price.setText(cart.getTotalPrice() + "");
                     Utils.SaveCartContext(context, cartList);
-//                    SaveCart();
                 } else {
-                    Toast.makeText(context, "Quantity in Stock is not enough !!!", Toast.LENGTH_LONG).show();
+                    Toast.makeText(context, "Quantity in Stock is not enough !!!", Toast.LENGTH_SHORT).show();
                 }
             }
         });
@@ -81,10 +86,11 @@ public class MyCartAdapter extends BaseAdapter {
                 if (cart.getAmount() > 1) {
                     cart.setAmount(cart.getAmount() - 1);
                     quantity.setText(cart.getAmount() + "");
+                    cartListActivity.SetTotal("Total: " + GetTotalPrice());
+//                    price.setText(cart.getTotalPrice() + "");
                     Utils.SaveCartContext(context, cartList);
-//                    SaveCart();
                 } else {
-                    Toast.makeText(context, "Quantity must higher than 0", Toast.LENGTH_LONG).show();
+                    Toast.makeText(context, "Quantity must higher than 0", Toast.LENGTH_SHORT).show();
                 }
 
             }
@@ -93,8 +99,10 @@ public class MyCartAdapter extends BaseAdapter {
             @Override
             public void onClick(View view) {
                 cartList.remove(i);
-                SaveCart();
+//                SaveCart();
+                Utils.SaveCartContext(context, cartList);
                 notifyDataSetChanged();
+                cartListActivity.SetTotal("Total: " + GetTotalPrice());
             }
         });
         return view;
@@ -106,5 +114,16 @@ public class MyCartAdapter extends BaseAdapter {
         String carts = new Gson().toJson(cartList);
         editor.putString("CARTLIST", carts);
         editor.commit();
+    }
+
+    public double GetTotalPrice(){
+        double total = 0.0;
+        if(cartList != null){
+            int l = cartList.size();
+            for(int i = 0; i< l; i++){
+                total += cartList.get(i).getTotalPrice();
+            }
+        }
+        return total;
     }
 }

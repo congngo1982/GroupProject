@@ -8,7 +8,7 @@ import androidx.annotation.Nullable;
 
 public class DBHelper extends SQLiteOpenHelper {
     private static final String DATABASE_NAME = "accountManagement";
-    private static final int DATABASE_VERSION = 5;
+    private static final int DATABASE_VERSION = 6;
 
     public DBHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -41,11 +41,11 @@ public class DBHelper extends SQLiteOpenHelper {
         String createOrder = "CREATE TABLE [order] ( " +
                 "id INTEGER PRIMARY KEY AUTOINCREMENT, " +
                 "id_accounts TEXT REFERENCES accounts (username), " +
-                "date_created TEXT, " +
+                "date_created TEXT (200), " +
                 "address TEXT (200), " +
                 "total_amount REAL NOT NULL )";
         String createOrderDetail = "CREATE TABLE orderdetail ( " +
-                "id INTEGER PRIMARY KEY,  " +
+                "id INTEGER PRIMARY KEY AUTOINCREMENT,  " +
                 "id_book INTEGER REFERENCES books (id), " +
                 "id_order INTEGER REFERENCES [order] (id), " +
                 "amount INTEGER NOT NULL, " +

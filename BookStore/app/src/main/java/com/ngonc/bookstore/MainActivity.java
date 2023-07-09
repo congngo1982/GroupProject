@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
 
@@ -29,6 +30,7 @@ public class MainActivity extends AppCompatActivity {
         ImageView cart = findViewById(R.id.btnCart);
         ImageView shopping = findViewById(R.id.btnOrder);
         ImageView account = findViewById(R.id.btnAccount);
+        ImageView search = findViewById(R.id.btnSearch);
 
         DBHelper dbHelper = new DBHelper(getApplicationContext());
         BookService bookService = new BookService(dbHelper);
@@ -51,6 +53,30 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View view) {
                 Intent intent = new Intent(MainActivity.this, CartList.class);
                 startActivity(intent);
+            }
+        });
+        shopping.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(MainActivity.this, Order.class);
+                startActivity(intent);
+            }
+        });
+        account.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(MainActivity.this, Account.class);
+                startActivity(intent);
+            }
+        });
+        search.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                EditText txtSearch = findViewById(R.id.txtSearch);
+                String name = txtSearch.getText().toString();
+                List<Books> books = bookService.SearchBook(name);
+                MainBookAdapter mainBookAdapter = new MainBookAdapter(getApplicationContext(), books);
+                listBook.setAdapter(mainBookAdapter);
             }
         });
     }

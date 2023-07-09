@@ -106,4 +106,21 @@ public class AccountService {
         }
         return account;
     }
+
+    public void UpdateAccount(Account account, String username){
+        SQLiteDatabase db = dbHelper.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put(USERNAME, account.getUsername());
+        values.put(PASSWORD, account.getPassword());
+        values.put(EMAIL, account.getEmail());
+        values.put(PHONE, account.getPhone());
+        values.put(ADDRESS, account.getAddress());
+        db.update(TABLE, values, USERNAME + " = ?", new String[]{username});
+    }
+    public void UpdateAccountRole(Account account){
+        SQLiteDatabase db = dbHelper.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put(ROLE, "ADMIN");
+        db.update(TABLE, values, USERNAME + " = ?", new String[]{account.getUsername()});
+    }
 }
