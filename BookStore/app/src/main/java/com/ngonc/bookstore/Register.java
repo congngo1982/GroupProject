@@ -43,17 +43,23 @@ public class Register extends AppCompatActivity {
         EditText txtEmail = (EditText) findViewById(R.id.regisEmail);
         EditText txtPhone = (EditText) findViewById(R.id.regisPhone);
         EditText txtAddress = (EditText) findViewById(R.id.regisAddress);
-        Account account = new Account(txtUsername.getText().toString(),
-                txtPassword.getText().toString(),
-                role,
-                txtEmail.getText().toString(),
-                txtPhone.getText().toString(),
-                txtAddress.getText().toString());
-        accountService.AddAccount(account);
-        System.out.println(accountService.GetAccount());
-        Intent intent = new Intent();
-        intent.putExtra("Info", account.getUsername());
-        setResult(1, intent);
-        finish();
+        Account acc = accountService.GetAccountByUsername(txtUsername.getText().toString());
+        if(acc != null){
+            TextView error = findViewById(R.id.errorRegister);
+            error.setText("Username is Existed !!!");
+            return;
+        }
+            Account account = new Account(txtUsername.getText().toString(),
+                    txtPassword.getText().toString(),
+                    role,
+                    txtEmail.getText().toString(),
+                    txtPhone.getText().toString(),
+                    txtAddress.getText().toString());
+            accountService.AddAccount(account);
+            System.out.println(accountService.GetAccount());
+            Intent intent = new Intent();
+            intent.putExtra("Info", account.getUsername());
+            setResult(1, intent);
+            finish();
     }
 }
