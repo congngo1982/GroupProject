@@ -4,7 +4,6 @@ import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
-import com.ngonc.model.Account;
 import com.ngonc.model.Author;
 
 import java.util.ArrayList;
@@ -33,7 +32,29 @@ public class AuthorService {
         db.insert(TABLE, null, values);
         db.close();
     }
-    public List<Author> GetAllAuthor() {
+
+    public boolean deleteAuthorByName(String name) {
+        SQLiteDatabase db = dbHelper.getWritableDatabase();
+        int rowsAffected = db.delete(TABLE, "name LIKE ?", new String[]{String.valueOf(name)});
+        db.close();
+        return rowsAffected > 0;
+    }
+
+    public boolean UpdateAuthor(Author author) {
+        SQLiteDatabase db = dbHelper.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put(NAME, author.getName());
+        values.put(GENDER, author.getGender());
+        values.put(DESCRIPTION, author.getDescription());
+        values.put(BIRTHDAY, author.getBirthday());
+
+        int rowsAffected = db.update(TABLE, values, "name like ?", new String[] {String.valueOf(author.getName())});
+        db.close();
+
+        return rowsAffected > 0;
+    }
+
+    public List<Author> getAllAuthor() {
         List<Author> authors = new ArrayList<>();
         String query = "SELECT * FROM " + TABLE;
         SQLiteDatabase db = this.dbHelper.getReadableDatabase();
@@ -54,30 +75,42 @@ public class AuthorService {
         return authors;
     }
     public Author getAuthorById(int id) {
-        SQLiteDatabase db = this.dbHelper.getReadableDatabase();
-        String query = "SELECT * FROM " + TABLE + " WHERE id = ?";
-        String[] selectionArgs = {String.valueOf(id)};
-        Cursor cursor = db.rawQuery(query, selectionArgs);
-        Author author = null;
-        if (cursor.moveToFirst()) {
-            int idColumnIndex = cursor.getColumnIndex(ID);
-            int nameColumnIndex = cursor.getColumnIndex(NAME);
-            int genderColumnIndex = cursor.getColumnIndex(GENDER);
-            int descriptionColumnIndex = cursor.getColumnIndex(DESCRIPTION);
-            int birthdayColumnIndex = cursor.getColumnIndex(BIRTHDAY);
-            if (idColumnIndex > -1 && nameColumnIndex > -1 && genderColumnIndex > -1) {
-                int authorId = cursor.getInt(idColumnIndex);
-                String name = cursor.getString(nameColumnIndex);
-                String gender = cursor.getString(genderColumnIndex);
-                String description = cursor.isNull(descriptionColumnIndex) ? null : cursor.getString(descriptionColumnIndex);
-                String birthday = cursor.isNull(birthdayColumnIndex) ? null : cursor.getString(birthdayColumnIndex);
-                author = new Author(authorId, name, gender, description, birthday);
+        //check id exist
+        if(checkIdExist(id)){
+            SQLiteDatabase db = this.dbHelper.getReadableDatabase();
+            String query = "SELECT * FROM " + TABLE + " WHERE id = ?";
+            String[] selectionArgs = {String.valueOf(id)};
+            Cursor cursor = db.rawQuery(query, selectionArgs);
+            Author author = null;
+            if (cursor.moveToFirst()) {
+                int idColumnIndex = cursor.getColumnIndex(ID);
+                int nameColumnIndex = cursor.getColumnIndex(NAME);
+                int genderColumnIndex = cursor.getColumnIndex(GENDER);
+                int descriptionColumnIndex = cursor.getColumnIndex(DESCRIPTION);
+                int birthdayColumnIndex = cursor.getColumnIndex(BIRTHDAY);
+                if (idColumnIndex > -1 && nameColumnIndex > -1 && genderColumnIndex > -1) {
+                    int authorId = cursor.getInt(idColumnIndex);
+                    String name = cursor.getString(nameColumnIndex);
+                    String gender = cursor.getString(genderColumnIndex);
+                    String description = cursor.isNull(descriptionColumnIndex) ? null : cursor.getString(descriptionColumnIndex);
+                    String birthday = cursor.isNull(birthdayColumnIndex) ? null : cursor.getString(birthdayColumnIndex);
+                    author = new Author(authorId, name, gender, description, birthday);
+                    return author;
+                }
             }
+            cursor.close();
         }
-        cursor.close();
-        return author;
+        return null;
     }
 
+    private boolean checkIdExist(int id){
+        for (Author author: getAllAuthor()) {
+            if(author.getId() == id){
+                return true;
+            }
+        }
+        return false;
+    }
 }
 
 

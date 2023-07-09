@@ -100,7 +100,8 @@ public class AccountService {
             cursor.close();
             return account;
         } catch (Exception ex) {
-
+            System.out.println(ex.getMessage());
+            System.out.println(ex.getMessage());
         } finally {
             cursor.close();
         }

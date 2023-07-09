@@ -12,6 +12,7 @@ import android.widget.TextView;
 import com.ngonc.dbhelper.AuthorService;
 import com.ngonc.dbhelper.BookService;
 import com.ngonc.dbhelper.DBHelper;
+import com.ngonc.model.Author;
 import com.ngonc.model.Books;
 
 import java.util.List;
@@ -78,7 +79,12 @@ public class BookAdapter extends BaseAdapter {
         AuthorService authorService = new AuthorService(dpHelper);
 
         viewHolder.tvName.setText(book.getName().toString());
-        viewHolder.tvAuthor.setText(authorService.getAuthorById(book.getAuthorId()).getName().toString());
+        Author author = getAuthorById(authorService.getAllAuthor(), book.getAuthorId());
+        if (author == null) {
+            viewHolder.tvAuthor.setText("");
+        } else {
+            viewHolder.tvAuthor.setText(author.getName());
+        }
         viewHolder.tvPrice.setText(String.format("%.2f", book.getPrice()));
         viewHolder.tvCategory.setText(book.getCategory().toString());
 
@@ -100,5 +106,13 @@ public class BookAdapter extends BaseAdapter {
         });
 
         return convertView;
+    }
+    private Author getAuthorById(List<Author> authors, int authorId) {
+        for (Author author : authors) {
+            if (author.getId() == authorId) {
+                return author;
+            }
+        }
+        return null;
     }
 }

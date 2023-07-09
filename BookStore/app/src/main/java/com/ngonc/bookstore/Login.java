@@ -34,6 +34,7 @@ public class Login extends AppCompatActivity {
         TextView register = (TextView) findViewById(R.id.txtRegister);
         DBHelper dbHelper = new DBHelper(getApplicationContext());
         AccountService accountService = new AccountService(dbHelper);
+        accountService.GetAccountByUsername("sell");
 //        accountService.AddAccount(new Account("admin",
 //                "admin",
 //                "ADMIN",
